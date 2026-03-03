@@ -29,12 +29,21 @@ export async function getTestTypes() {
   return response.data.testTypes;
 }
 
-export async function generateTestScript({ module, testType, description, additionalContext }) {
+export async function generateTestScript({
+  module,
+  testType,
+  description,
+  additionalContext,
+  envUrl,
+  username,
+}) {
   const response = await api.post("/generate", {
     module,
     testType,
     description,
     additionalContext,
+    envUrl,
+    username,
   });
   return response.data;
 }
