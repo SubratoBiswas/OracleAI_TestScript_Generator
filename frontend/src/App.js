@@ -1,0 +1,130 @@
+import React, { useState, useEffect, useCallback } from "react";
+import Header from "./components/Header";
+import InputPanel from "./components/InputPanel";
+import OutputPanel from "./components/OutputPanel";
+import HistoryDrawer from "./components/HistoryDrawer";
+import {
+  getConnectionStatus,
+  getModules,
+  getTestTypes,
+  generateTestScript,
+} from "./services/api";
+
+const INITIAL_FORM = {
+  module: "",
+  testType: "",
+  description: "",
+  additionalContext: "",
+};
+
+export default function App() {
+  const [connectionStatus, setConnectionStatus] = useState(null);
+  const [modules, setModules] = useState([]);
+  const [testTypes, setTestTypes] = useState([]);
+  const [formData, setFormData] = useState(INITIAL_FORM);
+  const [result, setResult] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [history, setHistory] = useState([]);
+  const [historyOpen, setHistoryOpen] = useState(false);
+
+  useEffect(() => {
+    async function init() {
+      try {
+        const [status, mods, types] = await Promise.all([
+          getConnectionStatus(),
+          getModules(),
+          getTestTypes(),
+        ]);
+        setConnectionStatus(status);
+        setModules(mods);
+        setTestTypes(types);
+      } catch {
+        // Backend not reachable - use fallback data
+        setConnectionStatus({ mode: "demo", connected: false, message: "Backend not reachable" });
+        setModules([
+          "Financials - General Ledger",
+          "Financials - Accounts Payable",
+          "Financials - Accounts Receivable",
+          "Procurement - Purchasing",
+          "HCM - Core HR",
+          "HCM - Payroll",
+          "SCM - Order Management",
+          "PPM - Project Management",
+        ]);
+        setTestTypes([
+          "Functional Test",
+          "Integration Test",
+          "Regression Test",
+          "End-to-End Test",
+          "User Acceptance Test (UAT)",
+        ]);
+      }
+    }
+    init();
+  }, []);
+
+  const handleGenerate = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    setResult(null);
+
+    try {
+      const response = await generateTestScript(formData);
+      setResult(response);
+      setHistory((prev) => [
+        {
+          module: formData.module,
+          testType: formData.testType,
+          description: formData.description,
+          result: response,
+          timestamp: new Date().toLocaleString(),
+        },
+        ...prev,
+      ]);
+    } catch (err) {
+      const message =
+        err.response?.data?.error || err.message || "Failed to generate test script.";
+      setError(message);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [formData]);
+
+  const handleHistorySelect = useCallback((item) => {
+    setResult(item.result);
+    setFormData({
+      module: item.module,
+      testType: item.testType,
+      description: item.description,
+      additionalContext: "",
+    });
+    setError(null);
+  }, []);
+
+  return (
+    <>
+      <Header
+        connectionStatus={connectionStatus}
+        onHistoryOpen={() => setHistoryOpen(true)}
+      />
+      <main className="app-main">
+        <InputPanel
+          modules={modules}
+          testTypes={testTypes}
+          formData={formData}
+          onFormChange={setFormData}
+          onGenerate={handleGenerate}
+          isLoading={isLoading}
+        />
+        <OutputPanel result={result} isLoading={isLoading} error={error} />
+      </main>
+      <HistoryDrawer
+        isOpen={historyOpen}
+        onClose={() => setHistoryOpen(false)}
+        history={history}
+        onSelect={handleHistorySelect}
+      />
+    </>
+  );
+}
