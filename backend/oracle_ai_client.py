@@ -264,7 +264,8 @@ class OracleAIClient:
             "Authorization": f"Bearer {self.api_key}",
         }
 
-    def _build_prompt(self, module, test_type, description, additional_context, env_url, username):
+    def _build_prompt(self, module, test_type, description, additional_context,
+                      env_url, username, password):
         """Build a structured prompt for automation-ready test script generation."""
         prompt = f"""You are an expert Oracle Fusion Cloud test automation engineer.
 Generate a step-by-step AUTOMATION test script that an AI testing tool can execute
@@ -275,6 +276,7 @@ directly against the Oracle Fusion Cloud UI.
 **Test Description:** {description}
 **Environment URL:** {env_url}
 **Username:** {username}
+**Password:** {password}
 """
         if additional_context:
             prompt += f"\n**Additional Context:** {additional_context}\n"
@@ -307,14 +309,15 @@ Rules for each step:
         return prompt
 
     def generate_test_script(self, module, test_type, description,
-                             additional_context="", env_url="", username=""):
+                             additional_context="", env_url="",
+                             username="", password=""):
         """Generate an automation test script using Oracle AI Assist."""
         prompt = self._build_prompt(module, test_type, description,
-                                    additional_context, env_url, username)
+                                    additional_context, env_url, username, password)
 
         if not self.endpoint or not self.api_key:
             return self._generate_demo_response(module, test_type, description,
-                                                env_url, username)
+                                                env_url, username, password)
 
         payload = {
             "compartmentId": self.compartment_id,
@@ -368,11 +371,12 @@ Rules for each step:
         except Exception as e:
             return {"success": False, "error": f"Unexpected error: {str(e)}"}
 
-    def _generate_demo_response(self, module, test_type, description, env_url, username):
+    def _generate_demo_response(self, module, test_type, description,
+                                env_url, username, password):
         """Generate a demo automation script when Oracle AI credentials are not configured."""
-        env_url = env_url or "https://your-oracle-fusion-instance.oraclecloud.com"
+        env_url = env_url or "<User provided>"
         username = username or "<User provided>"
-        password = "<User provided>"
+        password = password or "<User provided>"
 
         # Look up module-specific navigation and steps
         module_info = FUSION_MODULE_NAVIGATION.get(module, {})
@@ -405,9 +409,9 @@ Rules for each step:
         # Login steps
         lines.append(f"{step_num}. Login to: URL: {env_url}, Username: {username}, Password: {password}")
         step_num += 1
-        lines.append(f"{step_num}. Click in the User ID field and enter your User ID.")
+        lines.append(f"{step_num}. Click in the User ID field and enter \"{username}\".")
         step_num += 1
-        lines.append(f"{step_num}. Click in the Password field and enter your Password.")
+        lines.append(f"{step_num}. Click in the Password field and enter \"{password}\".")
         step_num += 1
         lines.append(f"{step_num}. Press the Sign In button.")
         step_num += 1

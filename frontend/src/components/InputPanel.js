@@ -13,7 +13,12 @@ export default function InputPanel({
   };
 
   const isValid =
-    formData.module && formData.testType && formData.description.trim();
+    formData.envUrl.trim() &&
+    formData.username.trim() &&
+    formData.password.trim() &&
+    formData.module &&
+    formData.testType &&
+    formData.description.trim();
 
   return (
     <aside className="input-panel">
@@ -30,7 +35,9 @@ export default function InputPanel({
         <div className="form-section-title">Environment</div>
 
         <div className="form-group">
-          <label className="form-label">Oracle Fusion URL</label>
+          <label className="form-label">
+            Oracle Fusion URL <span className="required">*</span>
+          </label>
           <input
             className="form-input"
             type="url"
@@ -42,7 +49,9 @@ export default function InputPanel({
 
         <div className="form-row">
           <div className="form-group">
-            <label className="form-label">Username</label>
+            <label className="form-label">
+              Username <span className="required">*</span>
+            </label>
             <input
               className="form-input"
               type="text"
@@ -52,7 +61,9 @@ export default function InputPanel({
             />
           </div>
           <div className="form-group">
-            <label className="form-label">Password</label>
+            <label className="form-label">
+              Password <span className="required">*</span>
+            </label>
             <input
               className="form-input"
               type="password"
