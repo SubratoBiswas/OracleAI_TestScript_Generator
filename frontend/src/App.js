@@ -30,6 +30,7 @@ export default function App() {
   const [error, setError] = useState(null);
   const [history, setHistory] = useState([]);
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [mode, setMode] = useState("demo"); // "demo" or "live"
 
   useEffect(() => {
     async function init() {
@@ -42,8 +43,11 @@ export default function App() {
         setConnectionStatus(status);
         setModules(mods);
         setTestTypes(types);
+        // If backend reports live connection, default to live mode
+        if (status?.mode === "live" && status?.connected) {
+          setMode("live");
+        }
       } catch {
-        // Backend not reachable - use fallback data
         setConnectionStatus({ mode: "demo", connected: false, message: "Backend not reachable" });
         setModules([
           "Financials - General Ledger",
@@ -52,6 +56,7 @@ export default function App() {
           "Procurement - Purchasing",
           "HCM - Core HR",
           "HCM - Payroll",
+          "SCM - Inventory Management",
           "SCM - Order Management",
           "PPM - Project Management",
         ]);
@@ -73,7 +78,7 @@ export default function App() {
     setResult(null);
 
     try {
-      const response = await generateTestScript(formData);
+      const response = await generateTestScript({ ...formData, mode });
       setResult(response);
       setHistory((prev) => [
         {
@@ -82,6 +87,7 @@ export default function App() {
           description: formData.description,
           envUrl: formData.envUrl,
           username: formData.username,
+          mode,
           result: response,
           timestamp: new Date().toLocaleString(),
         },
@@ -94,7 +100,7 @@ export default function App() {
     } finally {
       setIsLoading(false);
     }
-  }, [formData]);
+  }, [formData, mode]);
 
   const handleHistorySelect = useCallback((item) => {
     setResult(item.result);
@@ -107,6 +113,7 @@ export default function App() {
       username: item.username || "",
       password: "",
     });
+    if (item.mode) setMode(item.mode);
     setError(null);
   }, []);
 
@@ -115,6 +122,8 @@ export default function App() {
       <Header
         connectionStatus={connectionStatus}
         onHistoryOpen={() => setHistoryOpen(true)}
+        mode={mode}
+        onModeChange={setMode}
       />
       <main className="app-main">
         <InputPanel
@@ -124,8 +133,9 @@ export default function App() {
           onFormChange={setFormData}
           onGenerate={handleGenerate}
           isLoading={isLoading}
+          mode={mode}
         />
-        <OutputPanel result={result} isLoading={isLoading} error={error} />
+        <OutputPanel result={result} isLoading={isLoading} error={error} mode={mode} />
       </main>
       <HistoryDrawer
         isOpen={historyOpen}

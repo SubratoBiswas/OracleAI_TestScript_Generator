@@ -37,6 +37,7 @@ export async function generateTestScript({
   envUrl,
   username,
   password,
+  mode,
 }) {
   const response = await api.post("/generate", {
     module,
@@ -46,6 +47,7 @@ export async function generateTestScript({
     envUrl,
     username,
     password,
+    mode,
   });
   return response.data;
 }
