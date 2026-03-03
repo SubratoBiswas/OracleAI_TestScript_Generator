@@ -310,12 +310,12 @@ Rules for each step:
 
     def generate_test_script(self, module, test_type, description,
                              additional_context="", env_url="",
-                             username="", password=""):
+                             username="", password="", force_demo=False):
         """Generate an automation test script using Oracle AI Assist."""
         prompt = self._build_prompt(module, test_type, description,
                                     additional_context, env_url, username, password)
 
-        if not self.endpoint or not self.api_key:
+        if force_demo or not self.endpoint or not self.api_key:
             return self._generate_demo_response(module, test_type, description,
                                                 env_url, username, password)
 

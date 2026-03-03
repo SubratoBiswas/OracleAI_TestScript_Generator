@@ -86,13 +86,17 @@ def generate_test_script():
     env_url = data.get("envUrl", "").strip()
     username = data.get("username", "").strip()
     password = data.get("password", "").strip()
+    mode = data.get("mode", "demo").strip()
 
-    if not env_url:
-        return jsonify({"success": False, "error": "Oracle Fusion URL is required."}), 400
-    if not username:
-        return jsonify({"success": False, "error": "Username is required."}), 400
-    if not password:
-        return jsonify({"success": False, "error": "Password is required."}), 400
+    # In live mode, environment fields are required
+    if mode == "live":
+        if not env_url:
+            return jsonify({"success": False, "error": "Oracle Fusion URL is required in Live mode."}), 400
+        if not username:
+            return jsonify({"success": False, "error": "Username is required in Live mode."}), 400
+        if not password:
+            return jsonify({"success": False, "error": "Password is required in Live mode."}), 400
+
     if not module:
         return jsonify({"success": False, "error": "Module is required."}), 400
     if not test_type:
@@ -100,9 +104,12 @@ def generate_test_script():
     if not description:
         return jsonify({"success": False, "error": "Test description is required."}), 400
 
+    # Force demo mode if requested, regardless of backend credentials
+    force_demo = mode == "demo"
+
     result = ai_client.generate_test_script(
         module, test_type, description, additional_context,
-        env_url, username, password
+        env_url, username, password, force_demo=force_demo
     )
     status_code = 200 if result.get("success") else 500
     return jsonify(result), status_code
