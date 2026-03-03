@@ -83,7 +83,16 @@ def generate_test_script():
     test_type = data.get("testType", "").strip()
     description = data.get("description", "").strip()
     additional_context = data.get("additionalContext", "").strip()
+    env_url = data.get("envUrl", "").strip()
+    username = data.get("username", "").strip()
+    password = data.get("password", "").strip()
 
+    if not env_url:
+        return jsonify({"success": False, "error": "Oracle Fusion URL is required."}), 400
+    if not username:
+        return jsonify({"success": False, "error": "Username is required."}), 400
+    if not password:
+        return jsonify({"success": False, "error": "Password is required."}), 400
     if not module:
         return jsonify({"success": False, "error": "Module is required."}), 400
     if not test_type:
@@ -91,7 +100,10 @@ def generate_test_script():
     if not description:
         return jsonify({"success": False, "error": "Test description is required."}), 400
 
-    result = ai_client.generate_test_script(module, test_type, description, additional_context)
+    result = ai_client.generate_test_script(
+        module, test_type, description, additional_context,
+        env_url, username, password
+    )
     status_code = 200 if result.get("success") else 500
     return jsonify(result), status_code
 
