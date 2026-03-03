@@ -15,6 +15,9 @@ const INITIAL_FORM = {
   testType: "",
   description: "",
   additionalContext: "",
+  envUrl: "",
+  username: "",
+  password: "",
 };
 
 export default function App() {
@@ -77,6 +80,8 @@ export default function App() {
           module: formData.module,
           testType: formData.testType,
           description: formData.description,
+          envUrl: formData.envUrl,
+          username: formData.username,
           result: response,
           timestamp: new Date().toLocaleString(),
         },
@@ -98,6 +103,9 @@ export default function App() {
       testType: item.testType,
       description: item.description,
       additionalContext: "",
+      envUrl: item.envUrl || "",
+      username: item.username || "",
+      password: "",
     });
     setError(null);
   }, []);
