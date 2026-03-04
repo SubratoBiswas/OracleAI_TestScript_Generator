@@ -157,7 +157,8 @@
 1. Select Module: "HCM - Core HR"
 2. Select Test Type: "End-to-End Test"
 3. Enter Test Scenario: "Hire a new full-time employee"
-4. Click "Generate Demo Script"
+4. Enter Additional Context: "Employee: John Smith, Start Date: 01-Apr-2026, Legal Employer: US1 Legal Entity, Business Unit: US1 Business Unit, Department: Sales, Job: Sales Representative, Location: New York"
+5. Click "Generate Demo Script"
 
 **Expected Results:**
 - Script contains navigation to "My Client Groups" > "Person Management"
@@ -172,7 +173,8 @@
 1. Select Module: "Procurement - Purchasing"
 2. Select Test Type: "Functional Test"
 3. Enter Test Scenario: "Create a purchase order for office supplies"
-4. Click "Generate Demo Script"
+4. Enter Additional Context: "Supplier: Office Depot, Item: Printer Paper A4, Quantity: 500 reams, Unit Price: $5.50, Procurement BU: US1 Business Unit, Ship-to: Chicago Warehouse"
+5. Click "Generate Demo Script"
 
 **Expected Results:**
 - Script navigates to "Procurement" > "Purchase Orders"
@@ -186,7 +188,8 @@
 1. Select Module: "SCM - Inventory Management"
 2. Select Test Type: "Functional Test"
 3. Enter Test Scenario: "Post physical inventory adjustments"
-4. Click "Generate Demo Script"
+4. Enter Additional Context: "Organization: US1 Manufacturing, Subinventory: Raw Materials, Item: RM-1001, Adjustment Quantity: +50, Reason: Cycle Count Variance"
+5. Click "Generate Demo Script"
 
 **Expected Results:**
 - Script navigates to "Supply Chain Execution" > "Inventory Management"
@@ -200,7 +203,8 @@
 1. Select Module: "SCM - Order Management"
 2. Select Test Type: "Functional Test"
 3. Enter Test Scenario: "Create a sales order"
-4. Click "Generate Demo Script"
+4. Enter Additional Context: "Customer: Vision Corp, Bill-to Account: 1001, Ship-to Address: 100 Main St Dallas TX, Item: AS54888, Quantity: 10, UOM: Each"
+5. Click "Generate Demo Script"
 
 **Expected Results:**
 - Script navigates to "Order Management" > "Order Management"
@@ -213,7 +217,8 @@
 1. Select Module: "HCM - Payroll"
 2. Select Test Type: "Functional Test"
 3. Enter Test Scenario: "Run payroll for monthly employees"
-4. Click "Generate Demo Script"
+4. Enter Additional Context: "Legislative Data Group: US1 LDG, Payroll: US1 Monthly, Pay Period: March 2026, Flow Pattern: Run Regular Payroll, Employee Group: Full-Time Salaried"
+5. Click "Generate Demo Script"
 
 **Expected Results:**
 - Script navigates to "My Client Groups" > "Payroll"
@@ -226,7 +231,8 @@
 1. Select Module: "PPM - Project Management"
 2. Select Test Type: "Functional Test"
 3. Enter Test Scenario: "Create a new project"
-4. Click "Generate Demo Script"
+4. Enter Additional Context: "Project Name: Website Redesign 2026, Project Number: PRJ-2026-001, Template: Time and Materials, Start Date: 01-Apr-2026, End Date: 30-Sep-2026, Organization: US1 Projects, Project Manager: Jane Doe"
+5. Click "Generate Demo Script"
 
 **Expected Results:**
 - Script navigates to "Project Management" > "Project Management"
@@ -240,7 +246,8 @@
 2. Select Module: "Financials - Accounts Payable"
 3. Select Test Type: "Functional Test"
 4. Enter Test Scenario: "Create an invoice"
-5. Click "Generate Demo Script"
+5. Enter Additional Context: "Supplier: Global Electronics, Invoice Number: INV-20260301, Amount: $25,000, Currency: USD, Business Unit: US1"
+6. Click "Generate Demo Script"
 
 **Expected Results:**
 - Script generates successfully
@@ -256,7 +263,8 @@
 1. Select Module: "Financials - General Ledger"
 2. Select Test Type: "Regression Test"
 3. Enter Test Scenario: "Verify journal creation after upgrade"
-4. Click "Generate Demo Script"
+4. Enter Additional Context: "Ledger: US1 Primary Ledger, Category: Manual, Currency: USD, Debit Account: 01-000-1110-0000-000, Credit Account: 01-000-2110-0000-000, Amount: $5,000"
+5. Click "Generate Demo Script"
 
 **Expected Results:**
 - Script includes standard module steps PLUS regression-specific verifications:
@@ -270,7 +278,8 @@
 1. Select Module: "Financials - Accounts Payable"
 2. Select Test Type: "Integration Test"
 3. Enter Test Scenario: "Verify invoice posts to General Ledger"
-4. Click "Generate Demo Script"
+4. Enter Additional Context: "Supplier: ABC Corp, Invoice: INV-5001, Amount: $15,000, GL Account: 01-000-6110-0000-000, Verify subledger journal in GL module after invoice validation"
+5. Click "Generate Demo Script"
 
 **Expected Results:**
 - Script includes standard AP steps PLUS integration-specific verifications:
@@ -284,7 +293,8 @@
 1. Select Module: "HCM - Core HR"
 2. Select Test Type: "Security/Role Test"
 3. Enter Test Scenario: "Verify role-based access for hiring"
-4. Click "Generate Demo Script"
+4. Enter Additional Context: "Role with access: HR Specialist, Role without access: Employee, Action: Hire an Employee, Legal Employer: US1 Legal Entity, Expected: HR Specialist can hire, Employee gets access denied"
+5. Click "Generate Demo Script"
 
 **Expected Results:**
 - Script includes standard HCM steps PLUS security-specific verifications:
